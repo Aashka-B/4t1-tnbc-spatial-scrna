@@ -41,3 +41,6 @@ __pycache__/
 # Ignore hidden project config
 *.snakemake/
 
+# Ignore large binaries
+docker/cellranger-*.tar
+docker/spaceranger-*.tar

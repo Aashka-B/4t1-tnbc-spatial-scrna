@@ -24,17 +24,17 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxrender1
 
-# Install Cell Ranger 7.2.0
-RUN wget https://cf.10xgenomics.com/releases/cell-exp/cellranger-7.2.0.tar.gz -O cellranger-7.2.0.tar.gz \
- && tar -xzf cellranger-7.2.0.tar.gz -C /opt \
- && rm cellranger-7.2.0.tar.gz \
- && ln -s /opt/cellranger-7.2.0/cellranger /usr/local/bin/cellranger
+# Copy and Install Cell Ranger 9.0.1
+COPY docker/cellranger-9.0.1.tar /tmp/
+RUN tar -xf /tmp/cellranger-9.0.1.tar -C /opt \
+ && rm /tmp/cellranger-9.0.1.tar \
+ && ln -s /opt/cellranger-9.0.1/cellranger /usr/local/bin/cellranger
 
-# Install Space Ranger 2.1.1
-RUN wget https://cf.10xgenomics.com/releases/spatial-exp/spaceranger-2.1.1.tar.gz -O spaceranger-2.1.1.tar.gz \
- && tar -xzf spaceranger-2.1.1.tar.gz -C /opt \
- && rm spaceranger-2.1.1.tar.gz \
- && ln -s /opt/spaceranger-2.1.1/spaceranger /usr/local/bin/spaceranger
+# Copy and Install Space Ranger 3.1.3
+COPY docker/spaceranger-3.1.3.tar /tmp/
+RUN tar -xf /tmp/spaceranger-3.1.3.tar -C /opt \
+ && rm /tmp/spaceranger-3.1.3.tar \
+ && ln -s /opt/spaceranger-3.1.3/spaceranger /usr/local/bin/spaceranger
 
 # Create conda environment
 RUN conda env create -f environment.yml
