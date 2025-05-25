@@ -39,10 +39,11 @@ RUN tar -xf /tmp/spaceranger-3.1.3.tar -C /opt \
 # Create conda environment
 RUN conda env create -f environment.yml
 
-# Install dependencies
+# Install required system dependencies
 RUN apt-get update && apt-get install -y \
     gdebi-core \
     wget \
+    psmisc \
     && rm -rf /var/lib/apt/lists/*
 
 # Install libssl1.1 for ARM64
@@ -50,7 +51,7 @@ RUN wget http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb
     && dpkg -i libssl1.1_1.1.1n-0+deb10u3_arm64.deb \
     && rm libssl1.1_1.1.1n-0+deb10u3_arm64.deb
 
-# Install RStudio Server for ARM64 (Ubuntu focal)
+# Install RStudio Server for ARM64
 RUN wget https://s3.amazonaws.com/rstudio-ide-build/server/focal/arm64/rstudio-server-2025.05.0-496-arm64.deb \
     && gdebi -n rstudio-server-2025.05.0-496-arm64.deb \
     && rm rstudio-server-2025.05.0-496-arm64.deb
