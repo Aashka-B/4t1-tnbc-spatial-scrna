@@ -25,11 +25,15 @@ RUN apt-get update && apt-get install -y \
     libxrender1
 
 # Install Cell Ranger 7.2.0
-RUN wget -qO- https://cf.10xgenomics.com/releases/cell-exp/cellranger-7.2.0.tar.gz | tar -xz -C /opt \
+RUN wget https://cf.10xgenomics.com/releases/cell-exp/cellranger-7.2.0.tar.gz -O cellranger-7.2.0.tar.gz \
+ && tar -xzf cellranger-7.2.0.tar.gz -C /opt \
+ && rm cellranger-7.2.0.tar.gz \
  && ln -s /opt/cellranger-7.2.0/cellranger /usr/local/bin/cellranger
 
 # Install Space Ranger 2.1.1
-RUN wget -qO- https://cf.10xgenomics.com/releases/spatial-exp/spaceranger-2.1.1.tar.gz | tar -xz -C /opt \
+RUN wget https://cf.10xgenomics.com/releases/spatial-exp/spaceranger-2.1.1.tar.gz -O spaceranger-2.1.1.tar.gz \
+ && tar -xzf spaceranger-2.1.1.tar.gz -C /opt \
+ && rm spaceranger-2.1.1.tar.gz \
  && ln -s /opt/spaceranger-2.1.1/spaceranger /usr/local/bin/spaceranger
 
 # Create conda environment
