@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y \
     gdebi-core \
     wget \
     psmisc \
+    libclang-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install libssl1.1 for ARM64
