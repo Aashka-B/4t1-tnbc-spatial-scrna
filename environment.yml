@@ -21,7 +21,6 @@ dependencies:
   - pip:
       - scrublet
       - scvi-tools
-      - cell2location
       - scanpy
       - anndata
       - matplotlib
