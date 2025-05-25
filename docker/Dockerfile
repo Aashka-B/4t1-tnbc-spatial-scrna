@@ -51,7 +51,7 @@ RUN R -e "remotes::install_github('immunogenomics/harmony')"
 
 # Install Bioconductor packages
 RUN R -e "if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager', repos='https://cloud.r-project.org')"
-RUN R -e "BiocManager::install(c('CellChat', 'multinichenetr'), ask = FALSE, update = FALSE, repos='https://cloud.r-project.org')"
+RUN R -e "BiocManager::install(c('CellChat', 'multinichenetr'), ask = FALSE, update = FALSE)"
 
 # Install Jupyter and R kernel
 RUN pip install jupyterlab
