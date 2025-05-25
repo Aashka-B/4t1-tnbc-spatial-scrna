@@ -39,6 +39,12 @@ RUN tar -xf /tmp/spaceranger-3.1.3.tar -C /opt \
 # Create conda environment
 RUN conda env create -f environment.yml
 
+# Install RStudio Server
+RUN apt-get update && apt-get install -y gdebi-core \
+    && wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2025.05.0-496-amd64.deb \
+    && gdebi -n rstudio-server-2025.05.0-496-amd64.deb \
+    && rm rstudio-server-2025.05.0-496-amd64.deb
+
 # Set conda environment for all remaining RUN steps
 SHELL ["conda", "run", "-n", "bioinf_proj", "/bin/bash", "-c"]
 
@@ -57,12 +63,6 @@ RUN R -e "BiocManager::install(c('CellChat', 'multinichenetr'), ask = FALSE, upd
 RUN pip install jupyterlab
 RUN R -e "install.packages('IRkernel', repos='https://cloud.r-project.org')"
 RUN R -e "IRkernel::installspec(user = FALSE)"
-
-# Install RStudio Server
-RUN apt-get update && apt-get install -y gdebi-core \
-    && wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2025.05.0-496-amd64.deb \
-    && gdebi -n rstudio-server-2025.05.0-496-amd64.deb \
-    && rm rstudio-server-2025.05.0-496-amd64.deb
 
 # Default to bash shell
 CMD ["/bin/bash"]
