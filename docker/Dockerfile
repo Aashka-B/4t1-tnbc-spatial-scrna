@@ -59,9 +59,10 @@ RUN R -e "install.packages('IRkernel', repos='https://cloud.r-project.org')"
 RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # Install RStudio Server
-RUN wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2023.06.2-561-amd64.deb \
- && gdebi -n rstudio-server-2023.06.2-561-amd64.deb \
- && rm rstudio-server-2023.06.2-561-amd64.deb
+RUN apt-get update && apt-get install -y gdebi-core \
+    && wget https://download2.rstudio.org/server/focal/amd64/rstudio-server-2025.05.0-496-amd64.deb \
+    && gdebi -n rstudio-server-2025.05.0-496-amd64.deb \
+    && rm rstudio-server-2025.05.0-496-amd64.deb
 
 # Default to bash shell
 CMD ["/bin/bash"]
