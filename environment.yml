@@ -5,39 +5,28 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-  - r-base=4.2
-  - r-essentials
+  - r-base=4.3
+  - r-seurat
   - r-tidyverse
   - r-ggplot2
   - r-patchwork
   - r-cowplot
   - r-dplyr
-  - r-tidyr
-  - r-tibble
-  - r-readr
-  - r-stringr
-  - r-pheatmap
-  - r-data.table
-  - r-dt
-  - r-seurat
-  - r-monocle3
-  - r-deseq2
-  - bioconductor-org.mm.eg.db
-  - bioconductor-singlecellexperiment
-  - bioconductor-summarizedexperiment
-  - bioconductor-annotationdbi
-  - bioconductor-DoubletFinder
-  - scanpy
-  - snakemake
-  - pandas
-  - numpy
-  - matplotlib
-  - seaborn
+  - r-magrittr
+  - r-matrix
+  - r-knitr
+  - r-hdf5r
+  - r-remotes
   - pip
-  - sra-tools
-  - jupyterlab
   - pip:
-      - scikit-learn
-      - anndata
-      - umap-learn
       - scrublet
+      - scvi-tools
+      - cell2location
+      - scanpy
+      - anndata
+      - matplotlib
+      - seaborn
+      - pandas
+      - numpy
+      - scipy
+
