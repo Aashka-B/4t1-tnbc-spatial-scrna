@@ -1,0 +1,16 @@
+# Ignore large folders and unnecessary files from Docker context
+data/
+results/
+notebooks/
+config/SraRunTable.txt
+
+# Python/R cache
+__pycache__/
+*.pyc
+*.Rhistory
+
+# Git and system files
+.git/
+.gitignore
+.DS_Store
+.vscode/
