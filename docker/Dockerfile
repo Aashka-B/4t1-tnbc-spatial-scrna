@@ -39,9 +39,9 @@ RUN tar -xf /tmp/spaceranger-3.1.3.tar -C /opt \
 # Create conda environment
 RUN conda env create -f environment.yml
 
-# Install RStudio Server
+# Install RStudio Server for ARM64 (Ubuntu focal)
 RUN apt-get update && apt-get install -y gdebi-core \
- && wget https://download2.rstudio.org/server/jammy/arm64/rstudio-server-2025.05.0-496-arm64.deb \
+ && wget https://s3.amazonaws.com/rstudio-ide-build/server/focal/arm64/rstudio-server-2025.05.0-496-arm64.deb \
  && gdebi -n rstudio-server-2025.05.0-496-arm64.deb \
  && rm rstudio-server-2025.05.0-496-arm64.deb
 
