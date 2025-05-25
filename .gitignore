@@ -1,0 +1,43 @@
+# Ignore data files
+data/
+results/
+config/SraRunTable.txt
+
+# Ignore notebooks' checkpoints
+**/.ipynb_checkpoints
+
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Ignore R history and cache
+.Rhistory
+.RData
+.Rproj.user/
+
+# Ignore temporary editor files
+*.swp
+*.tmp
+*.log
+
+# VS Code and macOS junk
+.DS_Store
+.vscode/
+
+# Ignore environment files
+*.env
+*.bak
+
+# Ignore large or generated files
+*.fastq
+*.bam
+*.sam
+*.h5
+*.mtx
+*.tsv
+*.csv
+
+# Ignore hidden project config
+*.snakemake/
+
