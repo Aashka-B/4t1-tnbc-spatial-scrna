@@ -41,9 +41,9 @@ RUN conda env create -f environment.yml
 
 # Install RStudio Server
 RUN apt-get update && apt-get install -y gdebi-core \
-    && wget https://download2.rstudio.org/server/jammy/arm64/rstudio-server-2023.12.1-402-arm64.deb \
-    && gdebi -n rstudio-server-2023.12.1-402-arm64.deb \
-    && rm rstudio-server-2023.12.1-402-arm64.deb
+ && wget https://download2.rstudio.org/server/jammy/arm64/rstudio-server-2025.05.0-496-arm64.deb \
+ && gdebi -n rstudio-server-2025.05.0-496-arm64.deb \
+ && rm rstudio-server-2025.05.0-496-arm64.deb
 
 # Set conda environment for all remaining RUN steps
 SHELL ["conda", "run", "-n", "bioinf_proj", "/bin/bash", "-c"]
