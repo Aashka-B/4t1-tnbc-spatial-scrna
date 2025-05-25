@@ -55,6 +55,7 @@ RUN R -e "BiocManager::install(c('CellChat', 'multinichenetr'), ask = FALSE, upd
 
 # Install Jupyter and R kernel
 RUN pip install jupyterlab
+RUN R -e "install.packages('IRkernel', repos='https://cloud.r-project.org')"
 RUN R -e "IRkernel::installspec(user = FALSE)"
 
 # Install RStudio Server
