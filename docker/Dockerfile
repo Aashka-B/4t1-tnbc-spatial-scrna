@@ -45,6 +45,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     psmisc \
     libclang-dev \
+    sudo \
     && rm -rf /var/lib/apt/lists/*
 
 # Install libssl1.1 for ARM64
