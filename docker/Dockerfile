@@ -80,3 +80,15 @@ RUN R -e "IRkernel::installspec(user = FALSE)"
 # Default to bash shell
 CMD ["/bin/bash"]
 
+# Set R path for RStudio Server
+RUN echo "rsession-which-r=/opt/conda/envs/bioinf_proj/bin/R" > /etc/rstudio/rserver.conf
+
+# Create default RStudio user
+RUN useradd -m rstudio && echo "rstudio:bioinf123" | chpasswd
+
+# Expose default ports
+EXPOSE 8787 8888
+
+# Start both RStudio Server and JupyterLab when container launches
+CMD bash -c "rstudio-server start && jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --NotebookApp.token=''"
+
