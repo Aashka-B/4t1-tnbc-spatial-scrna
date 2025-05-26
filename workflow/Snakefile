@@ -1,6 +1,16 @@
 # workflow/Snakefile
 
-configfile: "config/config.yaml"
+import yaml
+
+# Check if config.yaml exists; generate if missing
+import os
+if not os.path.exists("config/config.yaml"):
+    print("config.yaml not found. Running generate_config.py...")
+    os.system("python scripts/download/generate_config.py")
+
+# Now load the generated config
+with open("config/config.yaml") as f:
+    config = yaml.safe_load(f)
 
 rule all:
     input:
@@ -11,6 +21,7 @@ rule download_fastq:
         "data/raw/{sra}.fastq"
     shell:
         """
-        prefetch {wildcards.sra}
-        fasterq-dump {wildcards.sra} -O data/raw/
+        prefetch {wildcards.sra} || echo "Prefetch failed for {wildcards.sra}"
+        fasterq-dump {wildcards.sra} -O data/raw/ || echo "fasterq-dump failed for {wildcards.sra}"
         """
+
