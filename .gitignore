@@ -1,15 +1,35 @@
-# Ignore data files
-data/
-results/
-config/SraRunTable.txt
+# Ignore raw/derived data files
+data/**
+!data/.gitkeep
+
+# Ignore hidden snakemake working state
+*.snakemake/
 
 # Ignore logs
-logs/
+logs/**
+!logs/.gitkeep
+
+# Results
+
+# FastQC outputs: ignore contents, keep folder
+results/qc/fastqc/**
+!results/qc/fastqc/
+!results/qc/fastqc/.gitkeep
+
+# MultiQC: keep the report (others can be regenerated)
+results/qc/multiqc/**
+!results/qc/multiqc/
+!results/qc/multiqc/.gitkeep
+!results/qc/multiqc/multiqc_report.html
+
+# VS Code and macOS junk
+.DS_Store
+.vscode/
 
 # Ignore notebooks' checkpoints
 **/.ipynb_checkpoints
 
-# Ignore Python cache
+# Ignore Python build/cache
 __pycache__/
 *.py[cod]
 *.so
@@ -19,30 +39,13 @@ __pycache__/
 .RData
 .Rproj.user/
 
-# Ignore temporary editor files
+# Ignore temporary files
 *.swp
 *.tmp
-*.log
 
-# VS Code and macOS junk
-.DS_Store
-.vscode/
-
-# Ignore environment files
+# Ignore environment files and backups
 *.env
 *.bak
-
-# Ignore large or generated files
-*.fastq
-*.bam
-*.sam
-*.h5
-*.mtx
-*.tsv
-*.csv
-
-# Ignore hidden project config
-*.snakemake/
 
 # Ignore large binaries
 docker/cellranger-*.tar
