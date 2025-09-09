@@ -3,6 +3,9 @@ data/
 results/
 config/SraRunTable.txt
 
+# Ignore logs
+logs/
+
 # Ignore notebooks' checkpoints
 **/.ipynb_checkpoints
 
