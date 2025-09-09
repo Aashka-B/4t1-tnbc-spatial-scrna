@@ -7,6 +7,8 @@ dependencies:
   - python=3.10
   - snakemake
   - sra-tools
+  - fastqc
+  - multiqc
   - r-base=4.3
   - r-seurat
   - r-tidyverse
@@ -30,4 +32,3 @@ dependencies:
       - pandas
       - numpy
       - scipy
-
