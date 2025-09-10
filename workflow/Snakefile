@@ -1,27 +1,38 @@
 # workflow/Snakefile
 
+import os
+import sys
+import subprocess
+import pathlib
 import yaml
 
 # Check if config.yaml exists; generate if missing
-import os
-if not os.path.exists("config/config.yaml"):
+cfg_path = pathlib.Path("config/config.yaml")
+if not cfg_path.exists():
     print("config.yaml not found. Running generate_config.py...")
-    os.system("python scripts/download/generate_config.py")
+    try:
+        subprocess.check_call([sys.executable, "scripts/download/generate_config.py"])
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(
+            f"Config generation failed (exit {e.returncode}). "
+            "Open scripts/download/generate_config.py and fix."
+        ) from e
 
-# Now load the generated config
-with open("config/config.yaml") as f:
-    config = yaml.safe_load(f)
+# Load the config and extract SRA_IDS
+with open(cfg_path) as fh:
+    CFG = yaml.safe_load(fh)
+SRA_IDS = CFG.get("sra_ids", [])
+
+# Ensure logs dir exists before proceeding with snakemake rules
+os.makedirs("logs", exist_ok=True)
+
+# Data acquisition and qc
+include: "workflow/rules/download.smk"
+include: "workflow/rules/qc.smk"
 
 rule all:
     input:
-        expand("data/raw/{sra}.fastq", sra=config["sra_ids"])
-
-rule download_fastq:
-    output:
-        "data/raw/{sra}.fastq"
-    shell:
-        """
-        prefetch {wildcards.sra} || echo "Prefetch failed for {wildcards.sra}"
-        fasterq-dump {wildcards.sra} -O data/raw/ || echo "fasterq-dump failed for {wildcards.sra}"
-        """
-
+        # Paired-end FASTQs for each SRA
+        expand(["data/raw/{sra}_1.fastq.gz", "data/raw/{sra}_2.fastq.gz"], sra=SRA_IDS),
+        # Final QC report
+        "results/qc/multiqc/multiqc_report.html"
