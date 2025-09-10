@@ -27,8 +27,8 @@ SRA_IDS = CFG.get("sra_ids", [])
 os.makedirs("logs", exist_ok=True)
 
 # Data acquisition and qc
-include: "workflow/rules/download.smk"
-include: "workflow/rules/qc.smk"
+include: "rules/download.smk"
+include: "rules/qc.smk"
 
 rule all:
     input:
