@@ -17,12 +17,12 @@ rule fastqc:
         r"""
         set -euo pipefail
         ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
-        log() { printf "[%s] [fastqc] [sra=%s] %s\n" "$(ts)" "{wildcards.sra}" "$*" >> {log}; }
+        logmsg() { printf "[%s] [fastqc] [sra=%s] %s\n" "$(ts)" "{wildcards.sra}" "$*" >> {log}; }
 
         mkdir -p {output}
-        log "START"
+        logmsg "START"
         fastqc -t {threads} -o {output} {input.r1} {input.r2} >> {log} 2>&1
-        log "DONE"
+        logmsg "DONE"
         """
 
 # Note: SRA_IDS defined in workflow/Snakefile
@@ -37,10 +37,10 @@ rule multiqc:
         r"""
         set -euo pipefail
         ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
-        log() { printf "[%s] [multiqc] %s\n" "$(ts)" "$*" >> {log}; }
+        logmsg() { printf "[%s] [multiqc] %s\n" "$(ts)" "$*" >> {log}; }
 
         mkdir -p results/qc/multiqc
-        log "START"
+        logmsg "START"
         multiqc -o results/qc/multiqc results/qc/fastqc >> {log} 2>&1
-        log "DONE"
+        logmsg "DONE"
         """

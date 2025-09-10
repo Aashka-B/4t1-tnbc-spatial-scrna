@@ -19,32 +19,32 @@ rule download_fastq:
         mkdir -p data/raw
 
         ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
-        log() { printf "[%s] [download_fastq] [sra=%s] %s\n" "$(ts)" "{wildcards.sra}" "$*" >> {log}; }
+        logmsg() { printf "[%s] [download_fastq] [sra=%s] %s\n" "$(ts)" "{wildcards.sra}" "$*" >> {log}; }
 
         tmpdir="$(mktemp -d)"
         trap "rm -rf $tmpdir" EXIT
 
         # Fetch SRA object to local cache
-        log "START"
-        log "prefetch starting"
-        prefetch {wildcards.sra} >> {log} 2>&1 || { log "ERROR prefetch failed"; exit 1; }
+        logmsg "START"
+        logmsg "prefetch starting"
+        prefetch {wildcards.sra} >> {log} 2>&1 || { logmsg "ERROR prefetch failed"; exit 1; }
 
         # Convert to FASTQ, split pairs, write to tmp
-        log "fasterq-dump starting"
+        logmsg "fasterq-dump starting"
         echo "[{wildcards.sra}] fasterq-dump..." >> {log}
-          || { log "ERROR fasterq-dump failed"; exit 1; }
+          || { logmsg "ERROR fasterq-dump failed"; exit 1; }
 
         # Ensure both mates exist
         if [ ! -s "$tmpdir/{wildcards.sra}_1.fastq" ] || [ ! -s "$tmpdir/{wildcards.sra}_2.fastq" ]; then
           ls -l "$tmpdir" >> {log} 2>&1 || true
-          log "ERROR expected paired files not found"
+          logmsg "ERROR expected paired files not found"
           exit 1
         fi
 
         # Compress to final outputs
-        log "gzip compressing to final outputs"
+        logmsg "gzip compressing to final outputs"
         gzip -c "$tmpdir/{wildcards.sra}_1.fastq" > {output.r1} 2>> {log}
         gzip -c "$tmpdir/{wildcards.sra}_2.fastq" > {output.r2} 2>> {log}
 
-        log "DONE"
+        logmsg "DONE"
         """
