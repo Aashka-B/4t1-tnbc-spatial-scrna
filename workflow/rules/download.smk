@@ -18,33 +18,35 @@ rule download_fastq:
         set -euo pipefail
         mkdir -p data/raw
 
-        ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
-        logmsg() { printf "[%s] [download_fastq] [sra=%s] %s\n" "$(ts)" "{wildcards.sra}" "$*" >> {log}; }
+        ts() ( date -u +"%Y-%m-%dT%H:%M:%SZ" )
+
+        printf "[%s] [download_fastq] [sra={wildcards.sra}] START\n" "$(ts)" >> {log}
 
         tmpdir="$(mktemp -d)"
-        trap "rm -rf $tmpdir" EXIT
+        trap 'rm -rf "$tmpdir"' EXIT
 
-        # Fetch SRA object to local cache
-        logmsg "START"
-        logmsg "prefetch starting"
-        prefetch {wildcards.sra} >> {log} 2>&1 || { logmsg "ERROR prefetch failed"; exit 1; }
-
-        # Convert to FASTQ, split pairs, write to tmp
-        logmsg "fasterq-dump starting"
-        echo "[{wildcards.sra}] fasterq-dump..." >> {log}
-          || { logmsg "ERROR fasterq-dump failed"; exit 1; }
-
-        # Ensure both mates exist
-        if [ ! -s "$tmpdir/{wildcards.sra}_1.fastq" ] || [ ! -s "$tmpdir/{wildcards.sra}_2.fastq" ]; then
-          ls -l "$tmpdir" >> {log} 2>&1 || true
-          logmsg "ERROR expected paired files not found"
+        printf "[%s] [download_fastq] [sra={wildcards.sra}] prefetch starting\n" "$(ts)" >> {log}
+        if ! prefetch {wildcards.sra} >> {log} 2>&1; then
+          printf "[%s] [download_fastq] [sra={wildcards.sra}] ERROR prefetch failed\n" "$(ts)" >> {log}
           exit 1
         fi
 
-        # Compress to final outputs
-        logmsg "gzip compressing to final outputs"
+        printf "[%s] [download_fastq] [sra={wildcards.sra}] fasterq-dump starting\n" "$(ts)" >> {log}
+        if ! fasterq-dump --split-files --threads {threads} -O "$tmpdir" {wildcards.sra} >> {log} 2>&1; then
+          printf "[%s] [download_fastq] [sra={wildcards.sra}] ERROR fasterq-dump failed\n" "$(ts)" >> {log}
+          exit 1
+        fi
+
+        # Validate paired outputs
+        if [ ! -s "$tmpdir/{wildcards.sra}_1.fastq" ] || [ ! -s "$tmpdir/{wildcards.sra}_2.fastq" ]; then
+          ls -l "$tmpdir" >> {log} 2>&1 || true
+          printf "[%s] [download_fastq] [sra={wildcards.sra}] ERROR expected paired files not found\n" "$(ts)" >> {log}
+          exit 1
+        fi
+
+        printf "[%s] [download_fastq] [sra={wildcards.sra}] gzip compressing to final outputs\n" "$(ts)" >> {log}
         gzip -c "$tmpdir/{wildcards.sra}_1.fastq" > {output.r1} 2>> {log}
         gzip -c "$tmpdir/{wildcards.sra}_2.fastq" > {output.r2} 2>> {log}
 
-        logmsg "DONE"
+        printf "[%s] [download_fastq] [sra={wildcards.sra}] DONE\n" "$(ts)" >> {log}
         """

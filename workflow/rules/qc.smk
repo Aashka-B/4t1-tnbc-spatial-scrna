@@ -16,17 +16,17 @@ rule fastqc:
     shell:
         r"""
         set -euo pipefail
-        ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
-        logmsg() { printf "[%s] [fastqc] [sra=%s] %s\n" "$(ts)" "{wildcards.sra}" "$*" >> {log}; }
+        ts() ( date -u +"%Y-%m-%dT%H:%M:%SZ" )
 
         mkdir -p {output}
-        logmsg "START"
+        printf "[%s] [fastqc] [sra={wildcards.sra}] START\n" "$(ts)" >> {log}
         fastqc -t {threads} -o {output} {input.r1} {input.r2} >> {log} 2>&1
-        logmsg "DONE"
+        printf "[%s] [fastqc] [sra={wildcards.sra}] DONE\n" "$(ts)" >> {log}
         """
 
 # Note: SRA_IDS defined in workflow/Snakefile
 rule multiqc:
+    threads: 2
     input:
         expand("results/qc/fastqc/{sra}", sra=SRA_IDS)  # ensure FastQC runs for all
     output:
@@ -36,11 +36,10 @@ rule multiqc:
     shell:
         r"""
         set -euo pipefail
-        ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
-        logmsg() { printf "[%s] [multiqc] %s\n" "$(ts)" "$*" >> {log}; }
+        ts() ( date -u +"%Y-%m-%dT%H:%M:%SZ" )
 
         mkdir -p results/qc/multiqc
-        logmsg "START"
+        printf "[%s] [multiqc] START\n" "$(ts)" >> {log}
         multiqc -o results/qc/multiqc results/qc/fastqc >> {log} 2>&1
-        logmsg "DONE"
+        printf "[%s] [multiqc] DONE\n" "$(ts)" >> {log}
         """
